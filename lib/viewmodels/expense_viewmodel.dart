@@ -23,8 +23,7 @@ class ExpenseViewModel extends ChangeNotifier {
         _loadExpensesSilently(),
         _loadCategoriesSilently(),
       ]);
-    } catch (e) {
-      debugPrint("Error loading data: $e");
+    } catch (_) {
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -44,9 +43,7 @@ class ExpenseViewModel extends ChangeNotifier {
       await DatabaseHelper.instance.insert(expense);
       await _loadExpensesSilently();
       notifyListeners();
-    } catch (e) {
-      debugPrint("Error adding expense: $e");
-    }
+    } catch (_) {}
   }
 
   Future<void> deleteExpense(int id) async {
@@ -54,9 +51,15 @@ class ExpenseViewModel extends ChangeNotifier {
       await DatabaseHelper.instance.delete(id);
       await _loadExpensesSilently();
       notifyListeners();
-    } catch (e) {
-      debugPrint("Error deleting expense: $e");
-    }
+    } catch (_) {}
+  }
+
+  Future<void> updateExpense(Expense expense) async {
+    try {
+      await DatabaseHelper.instance.update(expense);
+      await _loadExpensesSilently();
+      notifyListeners();
+    } catch (_) {}
   }
 
   Future<bool> addCategory(String categoryName) async {
@@ -68,8 +71,7 @@ class ExpenseViewModel extends ChangeNotifier {
         return true;
       }
       return false;
-    } catch (e) {
-      debugPrint("Error adding category: $e");
+    } catch (_) {
       return false;
     }
   }

@@ -10,18 +10,12 @@ class DatabaseHelper {
   DatabaseHelper._init();
 
   bool get _useSqlite {
-    if (kIsWeb) return false;
     try {
       if (io.Platform.environment.containsKey('FLUTTER_TEST')) return false;
-    } catch (_) {
-      // Accessing Platform on web would throw, but kIsWeb guards it.
-      // This catch is just an extra precaution.
-    }
-    return defaultTargetPlatform == TargetPlatform.android ||
-        defaultTargetPlatform == TargetPlatform.iOS;
+    } catch (_) {}
+    return !kIsWeb && defaultTargetPlatform == TargetPlatform.android;
   }
 
-  // In-memory data for platforms where SQLite is not supported (Web, Desktop, etc.)
   final List<Expense> _inMemoryExpenses = [];
   int _inMemoryIdCounter = 1;
   final List<String> _inMemoryCategories = [
@@ -42,11 +36,7 @@ class DatabaseHelper {
   Future<Database> _initDB(String filePath) async {
     final dbPath = await getDatabasesPath();
     final path = '$dbPath/$filePath';
-    return await openDatabase(
-      path,
-      version: 1,
-      onCreate: _createDB,
-    );
+    return await openDatabase(path, version: 1, onCreate: _createDB);
   }
 
   Future _createDB(Database db, int version) async {
@@ -83,8 +73,6 @@ class DatabaseHelper {
       await db.insert('categories', {'name': category});
     }
   }
-
-  // --- Expenses Methods ---
 
   Future<Expense> insert(Expense expense) async {
     if (_useSqlite) {
@@ -143,8 +131,6 @@ class DatabaseHelper {
     }
   }
 
-  // --- Categories Methods ---
-
   Future<List<String>> getCategories() async {
     if (_useSqlite) {
       final db = await instance.database;
@@ -175,11 +161,9 @@ class DatabaseHelper {
         await db.insert('categories', {'name': trimmed});
         return true;
       } catch (e) {
-        debugPrint("Error inserting category: $e");
         return false;
       }
     } else {
-      // Check case insensitive duplicate
       final exists = _inMemoryCategories.any(
         (c) => c.toLowerCase() == trimmed.toLowerCase(),
       );
@@ -189,5 +173,20 @@ class DatabaseHelper {
       }
       return false;
     }
+  }
+
+  @visibleForTesting
+  void resetInMemory() {
+    _inMemoryExpenses.clear();
+    _inMemoryIdCounter = 1;
+    _inMemoryCategories.clear();
+    _inMemoryCategories.addAll([
+      'Food',
+      'Utilities',
+      'Entertainment',
+      'Transport',
+      'Shopping',
+      'Health',
+    ]);
   }
 }

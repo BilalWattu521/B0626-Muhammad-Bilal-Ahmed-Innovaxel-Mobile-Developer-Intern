@@ -18,7 +18,19 @@ void main() {
     expect(find.byType(FloatingActionButton), findsOneWidget);
 
     // Verify that light/dark theme switch is visible.
-    expect(find.text('Light'), findsOneWidget);
-    expect(find.text('Dark'), findsOneWidget);
+    expect(find.byIcon(Icons.light_mode_rounded), findsOneWidget);
+    expect(find.byIcon(Icons.dark_mode_rounded), findsOneWidget);
+
+    // Verify NavigationBar exists
+    expect(find.byType(NavigationBar), findsOneWidget);
+    expect(find.text('Expenses'), findsOneWidget);
+    expect(find.text('Summary'), findsOneWidget);
+
+    // Tap on the 'Summary' tab
+    await tester.tap(find.text('Summary'));
+    await tester.pumpAndSettle();
+
+    // Verify that the Summary screen empty state is shown
+    expect(find.text('No data available'), findsOneWidget);
   });
 }

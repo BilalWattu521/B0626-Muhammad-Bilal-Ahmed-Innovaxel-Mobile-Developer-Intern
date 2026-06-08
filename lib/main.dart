@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'services/theme_manager.dart';
-import 'views/home_view.dart';
+import 'views/dashboard_view.dart';
 
 final ThemeManager themeManager = ThemeManager();
 
@@ -20,16 +20,13 @@ class MyApp extends StatelessWidget {
           title: 'Expense Tracker',
           debugShowCheckedModeBanner: false,
           themeMode: themeManager.themeMode,
-          // Premium Light Theme
           theme: ThemeData(
             useMaterial3: true,
             colorScheme: ColorScheme.fromSeed(
-              seedColor: const Color(0xFF6366F1), // Modern Violet/Indigo
+              seedColor: const Color(0xFF6366F1),
               brightness: Brightness.light,
-              background: const Color(0xFFF8FAFC), // Off-white/slate-50
-              surface: Colors.white,
-              onBackground: const Color(0xFF0F172A),
-              onSurface: const Color(0xFF1E293B),
+              surface: const Color(0xFFF8FAFC),
+              onSurface: const Color(0xFF0F172A),
             ),
             appBarTheme: const AppBarTheme(
               backgroundColor: Colors.transparent,
@@ -60,16 +57,13 @@ class MyApp extends StatelessWidget {
               ),
             ),
           ),
-          // Premium Dark Theme
           darkTheme: ThemeData(
             useMaterial3: true,
             colorScheme: ColorScheme.fromSeed(
-              seedColor: const Color(0xFF818CF8), // Muted light indigo
+              seedColor: const Color(0xFF818CF8),
               brightness: Brightness.dark,
-              background: const Color(0xFF0B0F19), // Deep rich space black/navy
-              surface: const Color(0xFF161E2E), // Slate dark surface
-              onBackground: const Color(0xFFF1F5F9),
-              onSurface: const Color(0xFFE2E8F0),
+              surface: const Color(0xFF0B0F19),
+              onSurface: const Color(0xFFF1F5F9),
             ),
             appBarTheme: const AppBarTheme(
               backgroundColor: Colors.transparent,
@@ -99,7 +93,7 @@ class MyApp extends StatelessWidget {
               ),
             ),
           ),
-          home: const HomeView(),
+          home: const DashboardView(),
         );
       },
     );
